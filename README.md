@@ -9,7 +9,10 @@
 <div align="center">
   <h2 align="center">🧑‍⚖️ Members 🧑‍⚖️</h2>
 
-  <h3 align="center">👑 Team Leader & Lead Developer 👑</h3>
+  <h3 align="center">👑 Lead Planner 👑</h3>
+  <img src="https://img.shields.io/badge/namecomeshere-304CB2?style=for-the-badge&logo=namecomeshere&logoColor=white" />&nbsp
+  
+  <h3 align="center">👑 Lead Developer 👑</h3>
   <img src="https://img.shields.io/badge/Coder94-304CB2?style=for-the-badge&logo=Coder_94&logoColor=white" />&nbsp
 
   <h3 align="center">📠 Developer 📠</h3>
@@ -21,14 +24,13 @@
   <h3 align="center">📠 Developer 📠</h3>
   <img src="https://img.shields.io/badge/Mr.Cheon-304CB2?style=for-the-badge&logo=Mr.Cheon&logoColor=white" />&nbsp
   
-  <h3 align="center">👑 Modelling Leader & BackGround Modeller👑 </h3>
-  <img src="https://img.shields.io/badge/Marco-304CB2?style=for-the-badge&logo=Marco&logoColor=white" />&nbsp
-
-  <h3 align="center">🖍️ Character Modeller 🖍️</h3>
+  <h3 align="center">👑 Modelling Leader & Character Modeller 👑 </h3>
   <img src="https://img.shields.io/badge/Bread02-304CB2?style=for-the-badge&logo=Bread02&logoColor=white" />&nbsp
 
-  <h3 align="center">🖍️ BackGround Modeller 🖍️</h3>
-  <img src="https://img.shields.io/badge/Mr.Oh-304CB2?style=for-the-badge&logo=Mr.Oh&logoColor=white" />&nbsp
+  <h3 align="center">🖍️ Modeller 🖍️</h3>
+  <img src="https://img.shields.io/badge/Mr.Oh-304CB2?style=for-the-badge&logo=Mr.Oh&logoColor=white" />
+  <img src="https://img.shields.io/badge/namecomeshere-304CB2?style=for-the-badge&logo=namecomeshere&logoColor=white" />
+  <img src="https://img.shields.io/badge/Marco-304CB2?style=for-the-badge&logo=Marco&logoColor=white" />&nbsp
    
 </div>
 
@@ -98,6 +100,24 @@
   <img src="https://img.shields.io/badge/Mr.Oh-304CB2?style=for-the-badge&logo=kjdhr&logoColor=white"/>
   <br>
     <a href="mailto:dragonregad@gmail.com?subject=Connection%20To%20Mr.Oh&body=Conatacting%20To%Mr.Oh"/>
+    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
+  </a>
+
+  <br><br>
+
+  <!-- jaeil  Connection -->
+  <img src="https://img.shields.io/badge/namecomeshere-304CB2?style=for-the-badge&logo=namecomeshere&logoColor=white"/>
+  <br>
+    <a href="mailto:namecomeshere@gmail.com?subject=Connection%20To%20Mr.Cheon&body=Conatacting%20To%namecomeshere"/>
+    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
+  </a>
+
+  <br><br>
+
+  <!-- bro Connection -->
+  <img src="https://img.shields.io/badge/namecomeshere-304CB2?style=for-the-badge&logo=namecomeshere&logoColor=white" />
+  <br>
+    <a href="mailto:namecomeshere@gmail.com?subject=Connection%20To%20Mr.Cheon&body=Conatacting%20To%namecomeshere"/>
     <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
   </a>
   
