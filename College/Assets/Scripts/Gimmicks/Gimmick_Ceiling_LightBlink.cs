@@ -5,7 +5,7 @@ public class Gimmick_Ceiling_LightBlink : BasicGimmick
 {
     [Header("기믹 식별 설정")]
     [Tooltip("팀 공용 Define에 정의된 본인의 1단계 기믹 항목을 선택하세요.")]
-    public Define.GimmickLV1 myGimmick; // 팀 enum에 추가된 깜빡임 항목(예: flickering 등) 선택
+    public Define.GimmickLV1 myGimmick = Define.GimmickLV1.lightBlink; // 팀 enum에 추가된 깜빡임 항목(예: flickering 등) 선택
 
     [Header("조명 및 메쉬 타겟")]
     public Light[] targetLights;
