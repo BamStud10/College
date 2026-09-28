@@ -64,7 +64,7 @@
   <img src="https://img.shields.io/badge/kjdhr-304CB2?style=for-the-badge&logo=kjdhr&logoColor=white"/>
   <br>
     <a href="mailto:jbyyrh03@naver.com?subject=Connection%20To%20kjdhr&body=Conatacting%20To%kjdhr"/>
-    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Naver-03C75A?style=for-the-badge&logo=gmail&logoColor=white"/>
   </a>
 
   <br><br>
@@ -73,7 +73,7 @@
   <img src="https://img.shields.io/badge/Song_Bareum-304CB2?style=for-the-badge&logo=kjdhr&logoColor=white"/>
   <br>
     <a href="mailto:csr36928@naver.com?subject=Connection%20To%20Song_Bareum&body=Conatacting%20To%Song_Bareum"/>
-    <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
+    <img src="https://img.shields.io/badge/Naver-03C75A?style=for-the-badge&logo=gmail&logoColor=white"/>
   </a>
 
   <br><br>
@@ -97,7 +97,7 @@
   <br><br>
   
   <!-- Mr.Oh Connection -->
-  <img src="https://img.shields.io/badge/Mr.Oh-304CB2?style=for-the-badge&logo=kjdhr&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Mr.Oh-304CB2?style=for-the-badge&logo=Mr.Oh&logoColor=white"/>
   <br>
     <a href="mailto:dragonregad@gmail.com?subject=Connection%20To%20Mr.Oh&body=Conatacting%20To%Mr.Oh"/>
     <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
@@ -106,9 +106,9 @@
   <br><br>
 
   <!-- jaeil  Connection -->
-  <img src="https://img.shields.io/badge/namecomeshere-304CB2?style=for-the-badge&logo=namecomeshere&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Jaeil-304CB2?style=for-the-badge&logo=jaeil&logoColor=white"/>
   <br>
-    <a href="mailto:namecomeshere@gmail.com?subject=Connection%20To%20Mr.Cheon&body=Conatacting%20To%namecomeshere"/>
+    <a href="mailto:jaeil0842@gmail.com?subject=Connection%20To%20Jaeil&body=Conatacting%20To%Jaeil"/>
     <img src="https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white"/>
   </a>
 
