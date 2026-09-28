@@ -10,9 +10,9 @@
   <h2 align="center">🧑‍⚖️ Members 🧑‍⚖️</h2>
 
   <h3 align="center">👑 Lead Planner 👑</h3>
-  <img src="https://img.shields.io/badge/namecomeshere-304CB2?style=for-the-badge&logo=namecomeshere&logoColor=white" />&nbsp
+  <img src="https://img.shields.io/badge/JAEIL-304CB2?style=for-the-badge&logo=JAEIL&logoColor=white" />&nbsp
   
-  <h3 align="center">👑 Lead Developer 👑</h3>
+  <h3 align="center">👑 Lead Developer && Team Leader 👑</h3>
   <img src="https://img.shields.io/badge/Coder94-304CB2?style=for-the-badge&logo=Coder_94&logoColor=white" />&nbsp
 
   <h3 align="center">📠 Developer 📠</h3>
