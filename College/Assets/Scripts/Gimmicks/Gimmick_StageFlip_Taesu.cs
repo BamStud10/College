@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using UnityEngine;
 
-public class Gimmik_StageFlip_Taesu : BasicGimmick
+public class Gimmick_StageFlip_Taesu : BasicGimmick
 {
     public Define.GimmickLV1 myGimmick = Define.GimmickLV1.stageFlip;
 
@@ -21,10 +21,15 @@ public class Gimmik_StageFlip_Taesu : BasicGimmick
 
     private void Start()
     {
-        if (mapTransform != null)
+        // mapTransform을 인스펙터에서 따로 비워두면 스크립트가 붙은 자기 자신으로 자동 지정
+        if (mapTransform == null)
         {
-            originalMapRotation = mapTransform.rotation;
+            mapTransform = transform;
         }
+
+        // 초기 회전값과 위치값 모두 저장!
+        originalMapRotation = mapTransform.rotation;
+        originalMapPosition = mapTransform.position;
     }
 
     protected override void OnDisable()
@@ -41,7 +46,6 @@ public class Gimmik_StageFlip_Taesu : BasicGimmick
         if (mapTransform != null)
         {
             mapTransform.rotation = originalMapRotation * Quaternion.Euler(0f, 0f, 180f);
-
             mapTransform.position = originalMapPosition + new Vector3(0f, hallwayHeight, 0f);
         }
 
@@ -56,7 +60,9 @@ public class Gimmik_StageFlip_Taesu : BasicGimmick
 
         if (mapTransform != null)
         {
+            //회전과 위치를 모두 원본값으로 복구
             mapTransform.rotation = originalMapRotation;
+            mapTransform.position = originalMapPosition;
         }
 
         isGimmickActive = false;
