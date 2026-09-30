@@ -4,15 +4,14 @@ using UnityEngine;
 public class Gimmick_Ceiling_LightBlink : BasicGimmick
 {
     [Header("기믹 식별 설정")]
-    [Tooltip("팀 공용 Define에 정의된 본인의 1단계 기믹 항목을 선택하세요.")]
-    public Define.GimmickLV1 myGimmick = Define.GimmickLV1.lightBlink; // 팀 enum에 추가된 깜빡임 항목(예: flickering 등) 선택
+    public Define.GimmickLV1 myGimmick = Define.GimmickLV1.lightBlink;
 
-    [Header("조명 및 메쉬 타겟")]
+    [Header("깜빡임 제어 타겟 (원본 오브젝트 연결)")]
     public Light[] targetLights;
     public MeshRenderer fluorescentRenderer;
 
     [Header("깜빡임 주기 설정")]
-    public float minOnTime = 0.3f;
+    public float minOnTime = 0.2f;
     public float maxOnTime = 2.0f;
     public float minOffTime = 0.01f;
     public float maxOffTime = 0.1f;
@@ -21,40 +20,48 @@ public class Gimmick_Ceiling_LightBlink : BasicGimmick
 
     private void Awake()
     {
-        // 팀 규칙: Enum 값을 int로 변환해 부모 클래스의 _code에 할당
         _code = (int)myGimmick;
+        ResetGimmick(); // 시작 시 정상 켜짐 상태 보장
     }
 
-    /// <summary>
-    /// GimmickManager에서 본인 기믹 ID가 방송되었을 때 호출됨
-    /// </summary>
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        GimmickManager.OnGimmickTriggered += CheckAndReset;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        GimmickManager.OnGimmickTriggered -= CheckAndReset;
+    }
+
+    // 다른 기믹이 뽑히면 자신을 원상복구(초기화)
+    private void CheckAndReset(int triggeredID)
+    {
+        if (triggeredID != _code)
+        {
+            ResetGimmick();
+        }
+    }
+
     protected override void ExecuteGimmick()
     {
-        Debug.Log("[Gimmick] 형광등 깜빡임 기믹 시작");
+        Debug.Log("[Gimmick] 원본 형광등 깜빡임 시작!");
 
-        // 이전 루틴이 돌고 있다면 중복 실행 방지를 위해 정지 후 재시작
-        if (_flickerCoroutine != null)
-        {
-            StopCoroutine(_flickerCoroutine);
-        }
+        if (_flickerCoroutine != null) StopCoroutine(_flickerCoroutine);
         _flickerCoroutine = StartCoroutine(FlickerRoutine());
     }
 
-    /// <summary>
-    /// GimmickManager.OnGimmickReset 방송 시 호출됨 (정상 상태 복구)
-    /// </summary>
     protected override void ResetGimmick()
     {
-        Debug.Log("[Gimmick] 형광등 깜빡임 기믹 초기화");
-
-        // 깜빡임 중지
         if (_flickerCoroutine != null)
         {
             StopCoroutine(_flickerCoroutine);
             _flickerCoroutine = null;
         }
 
-        // 정상 상태(상시 켜짐)로 복귀
+        // 깜빡임을 멈추고 원본 조명을 '항상 켜진 상태'로 복구
         SetLightsState(true);
     }
 
@@ -62,15 +69,11 @@ public class Gimmick_Ceiling_LightBlink : BasicGimmick
     {
         while (true)
         {
-            // 1. 켜짐 유지
             SetLightsState(true);
-            float randomOnTime = Random.Range(minOnTime, maxOnTime);
-            yield return new WaitForSeconds(randomOnTime);
+            yield return new WaitForSeconds(Random.Range(minOnTime, maxOnTime));
 
-            // 2. 일시 소등
             SetLightsState(false);
-            float randomOffTime = Random.Range(minOffTime, maxOffTime);
-            yield return new WaitForSeconds(randomOffTime);
+            yield return new WaitForSeconds(Random.Range(minOffTime, maxOffTime));
         }
     }
 
@@ -80,23 +83,14 @@ public class Gimmick_Ceiling_LightBlink : BasicGimmick
         {
             foreach (Light light in targetLights)
             {
-                if (light != null)
-                {
-                    light.enabled = isOn;
-                }
+                if (light != null) light.enabled = isOn;
             }
         }
 
         if (fluorescentRenderer != null)
         {
-            if (isOn)
-            {
-                fluorescentRenderer.material.EnableKeyword("_EMISSION");
-            }
-            else
-            {
-                fluorescentRenderer.material.DisableKeyword("_EMISSION");
-            }
+            if (isOn) fluorescentRenderer.material.EnableKeyword("_EMISSION");
+            else fluorescentRenderer.material.DisableKeyword("_EMISSION");
         }
     }
 }
