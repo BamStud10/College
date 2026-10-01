@@ -1,17 +1,42 @@
-using System.Diagnostics;
 using UnityEngine;
 
 public class Gimmick_StageFlip_Taesu : BasicGimmick
 {
+    [Header("기믹 설정")]
     public Define.GimmickLV1 myGimmick = Define.GimmickLV1.stageFlip;
 
+    [Header("타겟 맵 Transform (자동 할당)")]
+    [Tooltip("실제 뒤집힐 복도/맵 오브젝트. 비워두면 첫 번째 자식을 지정합니다.")]
     public Transform mapTransform;
 
+    [Header("오프셋 설정")]
     public float hallwayHeight = 5.0f;
 
     private Quaternion originalMapRotation;
     private Vector3 originalMapPosition;
     private bool isGimmickActive = false;
+
+    private void Reset()
+    {
+        AutoAssignMap();
+    }
+
+    private void OnValidate()
+    {
+        if (mapTransform == null)
+        {
+            AutoAssignMap();
+        }
+    }
+
+    private void AutoAssignMap()
+    {
+        _code = (int)myGimmick;
+        if (transform.childCount > 0 && mapTransform == null)
+        {
+            mapTransform = transform.GetChild(0);
+        }
+    }
 
     protected override void OnEnable()
     {
@@ -21,56 +46,43 @@ public class Gimmick_StageFlip_Taesu : BasicGimmick
 
     private void Start()
     {
-        // mapTransform을 인스펙터에서 따로 비워두면 스크립트가 붙은 자기 자신으로 자동 지정
         if (mapTransform == null)
         {
-            mapTransform = transform;
+            AutoAssignMap();
         }
 
-        // 초기 회전값과 위치값 모두 저장!
-        originalMapRotation = mapTransform.rotation;
-        originalMapPosition = mapTransform.position;
-    }
-
-    protected override void OnDisable()
-    {
-        base.OnDisable();
+        if (mapTransform != null)
+        {
+            originalMapRotation = mapTransform.localRotation;
+            originalMapPosition = mapTransform.localPosition;
+        }
+        else
+        {
+            Debug.LogWarning($"[{GetType().Name}] 하위 맵 오브젝트를 찾을 수 없습니다!");
+        }
     }
 
     protected override void ExecuteGimmick()
     {
-        if (isGimmickActive) return;
+        if (isGimmickActive || mapTransform == null) return;
 
-        UnityEngine.Debug.Log("기믹 실행");
+        Debug.Log($"기믹 실행");
 
-        if (mapTransform != null)
-        {
-            mapTransform.rotation = originalMapRotation * Quaternion.Euler(0f, 0f, 180f);
-            mapTransform.position = originalMapPosition + new Vector3(0f, hallwayHeight, 0f);
-        }
+        mapTransform.localRotation = originalMapRotation * Quaternion.Euler(0f, 0f, 180f);
+        mapTransform.localPosition = originalMapPosition + new Vector3(0f, hallwayHeight, 0f);
 
         isGimmickActive = true;
     }
 
     protected override void ResetGimmick()
     {
-        if (!isGimmickActive) return;
+        if (!isGimmickActive || mapTransform == null) return;
 
-        UnityEngine.Debug.Log("기믹 초기화");
+        Debug.Log($"기믹 초기화");
 
-        if (mapTransform != null)
-        {
-            //회전과 위치를 모두 원본값으로 복구
-            mapTransform.rotation = originalMapRotation;
-            mapTransform.position = originalMapPosition;
-        }
+        mapTransform.localRotation = originalMapRotation;
+        mapTransform.localPosition = originalMapPosition;
 
         isGimmickActive = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

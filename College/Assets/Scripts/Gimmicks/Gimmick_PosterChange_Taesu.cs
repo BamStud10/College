@@ -3,55 +3,89 @@ using UnityEngine;
 public class Gimmik_PosterChange_Taesu : BasicGimmick
 {
     [Header("기믹 설정")]
-    [Tooltip("Define.GimmickLV2 중 posterChange 선택")]
     public Define.GimmickLV2 myGimmick = Define.GimmickLV2.posterChange;
 
+    [Header("타겟 오브젝트 (자동 할당)")]
+    [Tooltip("실제 포스터 Quad/Mesh 오브젝트. 비워두면 첫 번째 자식 오브젝트를 자동으로 사용합니다.")]
+    public GameObject targetPoster;
+
     [Header("임시 테스트 색상 설정")]
-    [Tooltip("기믹 발동 시 변경될 이상현상 색상 (기본: 빨간색)")]
     public Color anomalyColor = Color.red;
 
     [Header("크기 변경 설정")]
-    [Tooltip("기믹 발동 시 적용할 스케일 배율 (예: X=2.5, Y=2.5, Z=1)")]
+    [Tooltip("기믹 발동 시 적용할 스케일 배율")]
     public Vector3 targetScaleMultiplier = new Vector3(2.5f, 2.5f, 1f);
 
-    private MeshRenderer meshRenderer;
+    private MeshRenderer targetMeshRenderer;
     private Color originalColor;
     private Vector3 originalScale;
     private bool isGimmickActive = false;
 
+    private void Reset()
+    {
+        AutoAssignTarget();
+    }
+
+    private void OnValidate()
+    {
+        if (targetPoster == null)
+        {
+            AutoAssignTarget();
+        }
+    }
+
+    private void AutoAssignTarget()
+    {
+        _code = (int)myGimmick;
+        // 자식 오브젝트가 존재하면 첫 번째 자식을 타겟으로 지정
+        if (transform.childCount > 0 && targetPoster == null)
+        {
+            targetPoster = transform.GetChild(0).gameObject;
+        }
+    }
+
     protected override void OnEnable()
     {
-        // LV2 enum 값을 ID 코드로 설정
         _code = (int)myGimmick;
         base.OnEnable();
     }
 
     private void Start()
     {
-        // 포스터 오브젝트의 초기 스케일 저장
-        originalScale = transform.localScale;
-
-        meshRenderer = GetComponent<MeshRenderer>();
-        if (meshRenderer != null && meshRenderer.material != null)
+        if (targetPoster == null)
         {
-            // 에디터에서 설정해둔 기본 색상(파란색) 저장
-            originalColor = meshRenderer.material.color;
+            AutoAssignTarget();
+        }
+
+        if (targetPoster != null)
+        {
+            originalScale = targetPoster.transform.localScale;
+            targetMeshRenderer = targetPoster.GetComponent<MeshRenderer>();
+
+            if (targetMeshRenderer != null && targetMeshRenderer.material != null)
+            {
+                originalColor = targetMeshRenderer.material.color;
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"[{GetType().Name}] 하위 오브젝트(실제 포스터)를 찾을 수 없습니다!");
         }
     }
 
     protected override void ExecuteGimmick()
     {
-        if (isGimmickActive) return;
+        if (isGimmickActive || targetPoster == null) return;
 
         Debug.Log($"기믹 실행");
 
-        // 1. 포스터 거대화
-        transform.localScale = Vector3.Scale(originalScale, targetScaleMultiplier);
+        // 1. 하위 포스터 오브젝트 크기 변경
+        targetPoster.transform.localScale = Vector3.Scale(originalScale, targetScaleMultiplier);
 
-        // 2. 이상현상 임시 색상(빨간색)으로 변경
-        if (meshRenderer != null)
+        // 2. 하위 포스터 머티리얼 색상 변경
+        if (targetMeshRenderer != null)
         {
-            meshRenderer.material.color = anomalyColor;
+            targetMeshRenderer.material.color = anomalyColor;
         }
 
         isGimmickActive = true;
@@ -59,17 +93,17 @@ public class Gimmik_PosterChange_Taesu : BasicGimmick
 
     protected override void ResetGimmick()
     {
-        if (!isGimmickActive) return;
+        if (!isGimmickActive || targetPoster == null) return;
 
         Debug.Log($"기믹 초기화");
 
-        // 1. 크기 원복
-        transform.localScale = originalScale;
+        // 1. 하위 포스터 오브젝트 크기 복구
+        targetPoster.transform.localScale = originalScale;
 
-        // 2. 원래 색상(파란색)으로 복구
-        if (meshRenderer != null)
+        // 2. 하위 포스터 머티리얼 색상 복구
+        if (targetMeshRenderer != null)
         {
-            meshRenderer.material.color = originalColor;
+            targetMeshRenderer.material.color = originalColor;
         }
 
         isGimmickActive = false;
