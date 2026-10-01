@@ -46,8 +46,6 @@ public class Gimmick_Ceiling_DiscoBall : BasicGimmick
 
     protected override void ResetGimmick()
     {
-        Debug.Log("[Gimmick] 미러볼 기믹 초기화");
-
         // 1. 정상 조명 다시 켜기
         if (normalLight != null) normalLight.SetActive(true);
 
@@ -63,6 +61,29 @@ public class Gimmick_Ceiling_DiscoBall : BasicGimmick
         if (_isGimmickActive && actualMirrorBall != null)
         {
             actualMirrorBall.transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime);
+        }
+    }
+
+    // 부모(BasicGimmick)의 기능을 유지하면서 새로운 이벤트 구독 추가
+    protected override void OnEnable()
+    {
+        base.OnEnable();
+        GimmickManager.OnGimmickTriggered += CheckAndReset;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        GimmickManager.OnGimmickTriggered -= CheckAndReset;
+    }
+
+    // 매니저가 새로운 주사위 결과를 방송할 때마다 실행되는 함수
+    private void CheckAndReset(int triggeredID)
+    {
+        // 방송된 기믹 ID가 내 번호가 아니면 (다른 기믹이 당첨되었거나, 0번 정상 상태면)
+        if (triggeredID != _code)
+        {
+            ResetGimmick(); // 미러볼을 숨기고 정상 조명으로 복구
         }
     }
 }
