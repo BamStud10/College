@@ -1,47 +1,53 @@
 using UnityEngine;
 
+/// <summary>
+/// RoadChange 기믹 (ID: 1단계 기믹 범위)
+/// - 부모 오브젝트(컨트롤러): 스크립트 부착 및 항상 Active 유지 (매니저 이벤트 수신 보장)
+/// - 자식 오브젝트(비주얼): 머티리얼을 변경할 대상 MeshRenderer
+/// </summary>
 public class Gimmick_Road_RoadChange : BasicGimmick
 {
     [Header("기믹 설정")]
-    [Tooltip("Define.cs에 정의된 기믹 Enum")]
+    [Tooltip("Define.cs에 정의된 기믹 Enum (예: roadChange)")]
     public Define.GimmickLV1 myGimmick = Define.GimmickLV1.roadChange;
 
-    [Header("바닥 오브젝트 교체")]
-    [Tooltip("평소에 켜져 있는 기본 복도 바닥 오브젝트 (Plane)")]
-    [SerializeField] private GameObject _normalFloorObject;
+    [Header("머티리얼 변경 설정")]
+    [Tooltip("머티리얼을 변경할 대상 도로의 MeshRenderer (자식 오브젝트)")]
+    [SerializeField] private MeshRenderer _roadRenderer;
 
-    [Tooltip("기믹 발생 시 켜질 흙길/오솔길 바닥 오브젝트 (Floor_DirtRoad)")]
-    [SerializeField] private GameObject _dirtRoadObject;
+    [Tooltip("정상 상태일 때의 머티리얼")]
+    [SerializeField] private Material _normalMaterial;
 
+    [Tooltip("기믹 발동(이상 현상) 시 변경될 머티리얼 (예: 흙길 등)")]
+    [SerializeField] private Material _anomalyMaterial;
 
     private void Awake()
     {
         _code = (int)myGimmick;
-
-        // 게임 시작 시 초기 상태 보장
         ResetGimmick();
     }
 
     /// <summary>
-    /// GimmickManager가 roadChange(ID: 2)를 방송했을 때 호출
+    /// 기믹 발동: 이상 현상 머티리얼로 교체
     /// </summary>
     protected override void ExecuteGimmick()
     {
-        Debug.Log($"[Gimmick_Road_RoadChange] 기믹 활성화: 복도 바닥이 오솔길/흙길로 변경됩니다. (ID: {_code})");
+        Debug.Log($"[Gimmick_RoadChange] 기믹 활성화: 도로 머티리얼 변경 (ID: {_code})");
 
-        // 오브젝트 스위칭
-        if (_normalFloorObject != null) _normalFloorObject.SetActive(false);
-        if (_dirtRoadObject != null) _dirtRoadObject.SetActive(true);
-
+        if (_roadRenderer != null && _anomalyMaterial != null)
+        {
+            _roadRenderer.material = _anomalyMaterial;
+        }
     }
 
     /// <summary>
-    /// 다음 루프로 넘어가거나 초기화될 때 원래 복도 상태로 복구
+    /// 초기화: 기본 머티리얼로 원복
     /// </summary>
     protected override void ResetGimmick()
     {
-        // 복구: 기본 바닥 ON, 흙길 바닥 OFF
-        if (_normalFloorObject != null) _normalFloorObject.SetActive(true);
-        if (_dirtRoadObject != null) _dirtRoadObject.SetActive(false);
+        if (_roadRenderer != null && _normalMaterial != null)
+        {
+            _roadRenderer.material = _normalMaterial;
+        }
     }
 }
