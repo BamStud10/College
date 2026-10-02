@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
     {
         RectTransform rect = _testPopUp.GetComponent<RectTransform>();
         Vector2 newPos = rect.anchoredPosition;
-        newPos.y = 77;
+        newPos.y = -96;
         rect.anchoredPosition = newPos;
     }
 
