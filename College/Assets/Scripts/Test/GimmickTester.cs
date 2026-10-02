@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GimmickManager : MonoBehaviour
+public class GimmickTester : MonoBehaviour
 {
     #region variables
+    [Header("진척도 관리")]
+    [Range(1, 8)]
+    [Tooltip("현재 스테이지 (1~8)")]
+    public int currentStage = 1;
+
     [Header("확률 설정")]
     [Range(0, 100)]
     [Tooltip("이상 현상이 발생할 확률 (%)")]
@@ -19,55 +24,58 @@ public class GimmickManager : MonoBehaviour
     public static Action OnGimmickReset;
     #endregion
 
-    public void ResetAllGimmicks()
+    private void Update()
     {
-        OnGimmickReset?.Invoke();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            GenerateRandomGimmick();
+        }
     }
 
-    public int GenerateRandomGimmick(int currentStage)
+    public void GenerateRandomGimmick()
     {
         int selectedGimmickID = NORMAL_ID;
+
+        // 1. 0 ~ 99 사이의 랜덤 숫자를 뽑아서 이상 현상 확률 체크
         int randomRoll = UnityEngine.Random.Range(0, 100);
+
         if (randomRoll < _anomalyChance)
         {
-            selectedGimmickID = GetRandomGimmickIDByStage(currentStage);
+            // 이상 현상 당첨! (예: 70% 확률 성공)
+            selectedGimmickID = GetRandomGimmickIDByStage();
             Debug.Log($"[GimmickManager] 스테이지 {currentStage} 진입. ⚠️이상 현상 발생! (ID: {selectedGimmickID})");
         }
         else
         {
+            // 정상 상태 당첨!
             selectedGimmickID = NORMAL_ID;
             Debug.Log($"[GimmickManager] 스테이지 {currentStage} 진입. 🟢정상 상태입니다.");
         }
 
+        // 2. 결정된 ID 방송 (0이 방송되면 기믹 스크립트들은 아무 동작도 안 하거나 원상복구 됨)
         OnGimmickTriggered?.Invoke(selectedGimmickID);
-
-        return selectedGimmickID; // GameManager가 이상현상 유무를 알 수 있게 리턴
     }
 
-    private int GetRandomGimmickIDByStage(int currentStage)
+    private int GetRandomGimmickIDByStage()
     {
-        /*
-        미완이라 일단 봉인
         List<int> availableGimmicks = new List<int>();
 
+        // 1단계 기믹
         availableGimmicks.AddRange((int[])Enum.GetValues(typeof(Define.GimmickLV1)));
 
+        // 5~6 스테이지: 2단계 기믹 추가
         if (currentStage >= 5)
+        {
             availableGimmicks.AddRange((int[])Enum.GetValues(typeof(Define.GimmickLV2)));
+        }
 
+        // 7~8 스테이지: 3단계 기믹 추가
         if (currentStage >= 7)
+        {
             availableGimmicks.AddRange((int[])Enum.GetValues(typeof(Define.GimmickLV3)));
+        }
+
         int randomIndex = UnityEngine.Random.Range(0, availableGimmicks.Count);
-
         return availableGimmicks[randomIndex];
-        */
-
-        int[] availableGimmicks = new int[] { (int)Define.GimmickLV1.lightBlink, (int)Define.GimmickLV1.discoBall,
-                                              (int)Define.GimmickLV2.clockChange, (int)Define.GimmickLV2.posterChange,
-                                              (int)Define.GimmickLV1.roadChange, (int)Define.GimmickLV1.stageFlip};
-
-        int randomIndex = UnityEngine.Random.Range(0, availableGimmicks.Length);
-        return availableGimmicks[randomIndex];
-
     }
 }
