@@ -1,41 +1,22 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class Gimmick_StageFlip_Taesu : BasicGimmick
 {
-    [Header("±â¹Í ¼³Á¤")]
     public Define.GimmickLV1 myGimmick = Define.GimmickLV1.stageFlip;
 
-    [Header("Å¸°Ù ¸Ê Transform (ÀÚµ¿ ÇÒ´ç)")]
-    [Tooltip("½ÇÁ¦ µÚÁıÈú º¹µµ/¸Ê ¿ÀºêÁ§Æ®. ºñ¿öµÎ¸é Ã¹ ¹øÂ° ÀÚ½ÄÀ» ÁöÁ¤ÇÕ´Ï´Ù.")]
     public Transform mapTransform;
 
-    [Header("¿ÀÇÁ¼Â ¼³Á¤")]
     public float hallwayHeight = 5.0f;
 
     private Quaternion originalMapRotation;
     private Vector3 originalMapPosition;
     private bool isGimmickActive = false;
+    private bool isInitialized = false; // ì´ˆê¸°í™” ì—¬ë¶€ í”Œë˜ê·¸
 
-    private void Reset()
+    private void Awake()
     {
-        AutoAssignMap();
-    }
-
-    private void OnValidate()
-    {
-        if (mapTransform == null)
-        {
-            AutoAssignMap();
-        }
-    }
-
-    private void AutoAssignMap()
-    {
-        _code = (int)myGimmick;
-        if (transform.childCount > 0 && mapTransform == null)
-        {
-            mapTransform = transform.GetChild(0);
-        }
+        // ğŸ’¡ OnEnableì´ë‚˜ ExecuteGimmickë³´ë‹¤ ë¨¼ì € ì‹¤í–‰ë˜ë„ë¡ Awakeì—ì„œ ì´ˆê¸° ì¢Œí‘œ ë¯¸ë¦¬ ì €ì¥!
+        InitializeOriginalTransform();
     }
 
     protected override void OnEnable()
@@ -46,43 +27,64 @@ public class Gimmick_StageFlip_Taesu : BasicGimmick
 
     private void Start()
     {
-        if (mapTransform == null)
+        InitializeOriginalTransform();
+    }
+
+    private void InitializeOriginalTransform()
+    {
+        if (isInitialized) return;
+
+        if (mapTransform == null && transform.childCount > 0)
         {
-            AutoAssignMap();
+            mapTransform = transform.GetChild(0);
         }
 
         if (mapTransform != null)
         {
+            // ğŸ’¡ ë¶€ëª¨-ìì‹ êµ¬ì¡°ì—ì„œëŠ” localPosition / localRotationì„ ì‚¬ìš©í•´ì•¼ ì•ˆì „í•¨
             originalMapRotation = mapTransform.localRotation;
             originalMapPosition = mapTransform.localPosition;
-        }
-        else
-        {
-            Debug.LogWarning($"[{GetType().Name}] ÇÏÀ§ ¸Ê ¿ÀºêÁ§Æ®¸¦ Ã£À» ¼ö ¾ø½À´Ï´Ù!");
+            isInitialized = true;
         }
     }
 
     protected override void ExecuteGimmick()
     {
-        if (isGimmickActive || mapTransform == null) return;
+        if (isGimmickActive) return;
 
-        Debug.Log($"±â¹Í ½ÇÇà");
+        // í˜¹ì‹œ ëª°ë¼ ì‹¤í–‰ ì§ì „ì—ë„ ì´ˆê¸°í™” í™•ì¸
+        InitializeOriginalTransform();
 
-        mapTransform.localRotation = originalMapRotation * Quaternion.Euler(0f, 0f, 180f);
-        mapTransform.localPosition = originalMapPosition + new Vector3(0f, hallwayHeight, 0f);
+        UnityEngine.Debug.Log("ê¸°ë¯¹ ì‹¤í–‰");
+
+        if (mapTransform != null)
+        {
+            // ğŸ’¡ local ê¸°ì¤€ íšŒì „ ë° ìœ„ì¹˜ ì˜¤í”„ì…‹ ì ìš©
+            mapTransform.localRotation = originalMapRotation * Quaternion.Euler(0f, 0f, 180f);
+            mapTransform.localPosition = originalMapPosition + new Vector3(0f, hallwayHeight, 0f);
+        }
 
         isGimmickActive = true;
     }
 
     protected override void ResetGimmick()
     {
-        if (!isGimmickActive || mapTransform == null) return;
+        if (!isGimmickActive) return;
 
-        Debug.Log($"±â¹Í ÃÊ±âÈ­");
+        UnityEngine.Debug.Log("ê¸°ë¯¹ ì´ˆê¸°í™”");
 
-        mapTransform.localRotation = originalMapRotation;
-        mapTransform.localPosition = originalMapPosition;
+        if (mapTransform != null)
+        {
+            // ğŸ’¡ local ê¸°ì¤€ ì›ë˜ ìœ„ì¹˜/íšŒì „ ë³µêµ¬
+            mapTransform.localRotation = originalMapRotation;
+            mapTransform.localPosition = originalMapPosition;
+        }
 
         isGimmickActive = false;
+    }
+
+    protected override void OnDisable()
+    {
+        base.OnDisable();
     }
 }
