@@ -46,8 +46,6 @@ public class GimmickManager : MonoBehaviour
 
     private int GetRandomGimmickIDByStage(int currentStage)
     {
-        /*
-        미완이라 일단 봉인
         List<int> availableGimmicks = new List<int>();
 
         availableGimmicks.AddRange((int[])Enum.GetValues(typeof(Define.GimmickLV1)));
@@ -60,14 +58,5 @@ public class GimmickManager : MonoBehaviour
         int randomIndex = UnityEngine.Random.Range(0, availableGimmicks.Count);
 
         return availableGimmicks[randomIndex];
-        */
-
-        int[] availableGimmicks = new int[] { (int)Define.GimmickLV1.lightBlink, (int)Define.GimmickLV1.discoBall,
-                                              (int)Define.GimmickLV2.clockChange, (int)Define.GimmickLV2.posterChange,
-                                              (int)Define.GimmickLV1.roadChange, (int)Define.GimmickLV1.stageFlip};
-
-        int randomIndex = UnityEngine.Random.Range(0, availableGimmicks.Length);
-        return availableGimmicks[randomIndex];
-
     }
 }
