@@ -63,21 +63,11 @@ public class GameManager : MonoBehaviour
         if (CurrentStage >= MaxStage)
         {
             Debug.Log("🎉 게임 클리어! 대학교 탈출 성공!");
-            TestClear();
             return;
         }
 
         // 2. 판정이 끝났으니 다음 루프 준비
         StartNewLoop();
-    }
-
-    public GameObject _testPopUp;
-    private void TestClear()
-    {
-        RectTransform rect = _testPopUp.GetComponent<RectTransform>();
-        Vector2 newPos = rect.anchoredPosition;
-        newPos.y = -96;
-        rect.anchoredPosition = newPos;
     }
 
     private void StartNewLoop()
