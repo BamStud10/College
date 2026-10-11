@@ -64,7 +64,8 @@ public class GimmickManager : MonoBehaviour
 
         int[] availableGimmicks = new int[] { (int)Define.GimmickLV1.lightBlink, (int)Define.GimmickLV1.discoBall,
                                               (int)Define.GimmickLV2.clockChange, (int)Define.GimmickLV2.posterChange,
-                                              (int)Define.GimmickLV1.roadChange, (int)Define.GimmickLV1.stageFlip};
+                                              (int)Define.GimmickLV1.roadChange, (int)Define.GimmickLV1.stageFlip,
+                                              (int)Define.GimmickLV2.footSoundChange};
 
         int randomIndex = UnityEngine.Random.Range(0, availableGimmicks.Length);
         return availableGimmicks[randomIndex];
