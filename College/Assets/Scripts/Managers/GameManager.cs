@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI 연결")]
     [Tooltip("페이드 연출을 담당하는 스크립트")]
-    public Fader fader;
+    public Fader _fader;
 
     [Header("플레이어 및 스폰 설정")]
     public Transform playerTransform; // 플레이어 오브젝트
@@ -26,9 +27,9 @@ public class GameManager : MonoBehaviour
     {
         _playerRb = playerTransform.GetComponent<Rigidbody>();
 
-        if (fader != null)
+        if (_fader != null)
         {
-            fader.FadeIn();
+            _fader.FadeIn();
         }
 
         // 게임 시작 시 첫 번째 루프 굴리기
@@ -81,26 +82,34 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("🎉 게임 클리어! 대학교 탈출 성공!");
 
-            // 클리어 시에는 화면을 까맣게 끄고 대기 (또는 엔딩 씬으로 이동)
-            if (fader != null) fader.FadeOut();
+            if (_fader != null)
+            {
+                _fader.FadeOut();
+                // 화면이 완전히 까매질 때까지 기다림
+                yield return new WaitForSeconds(_fader.fadeDuration);
+            }
+
+            // 화면이 까매진 상태에서 엔딩 씬으로 이동
+            SceneManager.LoadScene("Ending");
+
             yield break;
         }
 
         // 2. 다음 루프로 넘어가기 전, 화면 까맣게 페이드 아웃
-        if (fader != null)
+        if (_fader != null)
         {
-            fader.FadeOut();
+            _fader.FadeOut();
             // 페이드 효과가 끝날 때까지 대기 (화면이 완전히 꺼질 때까지 기다림)
-            yield return new WaitForSeconds(fader.fadeDuration);
+            yield return new WaitForSeconds(_fader.fadeDuration);
         }
 
         // 3. 화면이 완전히 까만 상태에서 몰래 플레이어를 텔레포트 시키고 기믹 세팅
         StartNewLoop();
 
         // 4. 텔레포트가 완료되었으니 다시 화면 밝아짐 (페이드 인)
-        if (fader != null)
+        if (_fader != null)
         {
-            fader.FadeIn();
+            _fader.FadeIn();
         }
     }
 
