@@ -1,4 +1,5 @@
-﻿using Unity.VisualScripting;
+﻿using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -8,6 +9,10 @@ public class GameManager : MonoBehaviour
 
     [Header("매니저 연결")]
     public GimmickManager gimmickManager;
+
+    [Header("UI 연결")]
+    [Tooltip("페이드 연출을 담당하는 스크립트")]
+    public Fader fader;
 
     [Header("플레이어 및 스폰 설정")]
     public Transform playerTransform; // 플레이어 오브젝트
@@ -21,6 +26,11 @@ public class GameManager : MonoBehaviour
     {
         _playerRb = playerTransform.GetComponent<Rigidbody>();
 
+        if (fader != null)
+        {
+            fader.FadeIn();
+        }
+
         // 게임 시작 시 첫 번째 루프 굴리기
         StartNewLoop();
     }
@@ -30,6 +40,13 @@ public class GameManager : MonoBehaviour
     /// isForward가 true면 직진(출구), false면 후퇴(입구)
     /// </summary>
     public void ProcessLoop(bool isForward)
+    {
+        // 페이드 아웃 -> 텔레포트 -> 페이드 인 흐름을 코루틴으로 실행
+        StartCoroutine(LoopTransitionRoutine(isForward));
+    }
+
+    // 텔레포트와 페이드 연출의 타이밍을 맞추기 위한 코루틴 함수
+    private IEnumerator LoopTransitionRoutine(bool isForward)
     {
         // 1. 정답 판정 (8번출구 핵심 로직)
         if (_isAnomalyPresent)
@@ -63,11 +80,28 @@ public class GameManager : MonoBehaviour
         if (CurrentStage >= MaxStage)
         {
             Debug.Log("🎉 게임 클리어! 대학교 탈출 성공!");
-            return;
+
+            // 클리어 시에는 화면을 까맣게 끄고 대기 (또는 엔딩 씬으로 이동)
+            if (fader != null) fader.FadeOut();
+            yield break;
         }
 
-        // 2. 판정이 끝났으니 다음 루프 준비
+        // 2. 다음 루프로 넘어가기 전, 화면 까맣게 페이드 아웃
+        if (fader != null)
+        {
+            fader.FadeOut();
+            // 페이드 효과가 끝날 때까지 대기 (화면이 완전히 꺼질 때까지 기다림)
+            yield return new WaitForSeconds(fader.fadeDuration);
+        }
+
+        // 3. 화면이 완전히 까만 상태에서 몰래 플레이어를 텔레포트 시키고 기믹 세팅
         StartNewLoop();
+
+        // 4. 텔레포트가 완료되었으니 다시 화면 밝아짐 (페이드 인)
+        if (fader != null)
+        {
+            fader.FadeIn();
+        }
     }
 
     private void StartNewLoop()
