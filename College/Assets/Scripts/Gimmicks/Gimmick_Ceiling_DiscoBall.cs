@@ -5,14 +5,16 @@ public class Gimmick_Ceiling_DiscoBall : BasicGimmick
     [Header("기믹 식별 설정")]
     public Define.GimmickLV1 myGimmick = Define.GimmickLV1.discoBall;
 
-    [Header("오브젝트 세팅")]
-    [Tooltip("평소에 켜져 있을 정상 형광등 오브젝트")]
-    public GameObject normalLight;
+    [Header("조명 제어 (Ceiling_Lights 연결)")]
+    public Transform lightsParent;
+    private MeshRenderer[] normalLights;
 
-    [Tooltip("실제 미러볼 메쉬와 조명이 들어있는 하위 오브젝트")]
-    public GameObject actualMirrorBall; // 자식 오브젝트를 여기에 연결
+    [Header("전체 맵 밝기 제어")]
+    [Tooltip("하이어라키 최상단에 있는 Directional Light를 연결하세요")]
+    public Light mainDirectionalLight;
 
-    [Header("미러볼 회전 설정")]
+    [Header("디스코볼 설정 (Hall/DiscoBall 연결)")]
+    public GameObject discoBallObject;
     public float rotationSpeed = 90f;
 
     private bool _isGimmickActive = false;
@@ -21,50 +23,16 @@ public class Gimmick_Ceiling_DiscoBall : BasicGimmick
     {
         _code = (int)myGimmick;
 
-        // 깜빡하고 하위 오브젝트를 안 넣었을 경우, 자동으로 첫 번째 자식을 찾아주는 센스 있는 코드
-        if (actualMirrorBall == null && transform.childCount > 0)
+        // 부모 오브젝트가 연결되어 있으면 17개의 형광등 메쉬를 미리 찾아둡니다.
+        if (lightsParent != null)
         {
-            actualMirrorBall = transform.GetChild(0).gameObject;
+            normalLights = lightsParent.GetComponentsInChildren<MeshRenderer>();
         }
 
         // 시작 시 무조건 정상 상태로 세팅 (미러볼 끄기)
         ResetGimmick();
     }
 
-    protected override void ExecuteGimmick()
-    {
-        Debug.Log("[Gimmick] 미러볼 기믹 발동!");
-
-        // 1. 정상 조명 끄기
-        if (normalLight != null) normalLight.SetActive(false);
-
-        // 2. 내 하위 오브젝트(실제 미러볼) 켜기
-        if (actualMirrorBall != null) actualMirrorBall.SetActive(true);
-
-        _isGimmickActive = true;
-    }
-
-    protected override void ResetGimmick()
-    {
-        // 1. 정상 조명 다시 켜기
-        if (normalLight != null) normalLight.SetActive(true);
-
-        // 2. 내 하위 오브젝트(실제 미러볼) 숨기기
-        if (actualMirrorBall != null) actualMirrorBall.SetActive(false);
-
-        _isGimmickActive = false;
-    }
-
-    private void Update()
-    {
-        // 기믹이 켜져 있을 때만 실제 미러볼 오브젝트를 회전시킴
-        if (_isGimmickActive && actualMirrorBall != null)
-        {
-            actualMirrorBall.transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime);
-        }
-    }
-
-    // 부모(BasicGimmick)의 기능을 유지하면서 새로운 이벤트 구독 추가
     protected override void OnEnable()
     {
         base.OnEnable();
@@ -77,13 +45,72 @@ public class Gimmick_Ceiling_DiscoBall : BasicGimmick
         GimmickManager.OnGimmickTriggered -= CheckAndReset;
     }
 
-    // 매니저가 새로운 주사위 결과를 방송할 때마다 실행되는 함수
     private void CheckAndReset(int triggeredID)
     {
-        // 방송된 기믹 ID가 내 번호가 아니면 (다른 기믹이 당첨되었거나, 0번 정상 상태면)
         if (triggeredID != _code)
         {
-            ResetGimmick(); // 미러볼을 숨기고 정상 조명으로 복구
+            ResetGimmick();
+        }
+    }
+
+    protected override void ExecuteGimmick()
+    {
+        Debug.Log("[Gimmick] 디스코볼 기믹 발동!");
+        _isGimmickActive = true;
+
+        // 형광등 및 태양광 끄기
+        SetNormalLightsEmission(false);
+        if (mainDirectionalLight != null) mainDirectionalLight.enabled = false;
+
+        if (discoBallObject != null) discoBallObject.SetActive(true);
+    }
+
+    protected override void ResetGimmick()
+    {
+        _isGimmickActive = false;
+
+        // 형광등 및 태양광 다시 켜기
+        SetNormalLightsEmission(true);
+        if (mainDirectionalLight != null) mainDirectionalLight.enabled = true;
+
+        if (discoBallObject != null) discoBallObject.SetActive(false);
+    }
+
+    private void Update()
+    {
+        // 기믹이 켜져 있을 때 회전
+        if (_isGimmickActive && discoBallObject != null)
+        {
+            // Space.World를 추가하여 지지대가 휘둘러지지 않고 제자리에서 돌게 만듭니다.
+            discoBallObject.transform.Rotate(Vector3.up * rotationSpeed * Time.deltaTime, Space.World);
+        }
+    }
+
+    // 형광등 17개의 발광(Emission)을 일괄 제어하는 함수
+    private void SetNormalLightsEmission(bool isOn)
+    {
+        if (normalLights == null) return;
+
+        foreach (MeshRenderer renderer in normalLights)
+        {
+            if (renderer != null)
+            {
+                foreach (Material mat in renderer.materials)
+                {
+                    if (isOn)
+                    {
+                        mat.EnableKeyword("_EMISSION");
+                        // 원래의 하얀색 발광으로 복구 (숫자를 높이면 더 밝아집니다)
+                        mat.SetColor("_EmissionColor", Color.white * 2f);
+                    }
+                    else
+                    {
+                        mat.DisableKeyword("_EMISSION");
+                        // 강제로 검은색을 적용해 형광등을 완벽하게 끔
+                        mat.SetColor("_EmissionColor", Color.black);
+                    }
+                }
+            }
         }
     }
 }

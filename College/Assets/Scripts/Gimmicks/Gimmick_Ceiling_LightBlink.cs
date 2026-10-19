@@ -6,9 +6,12 @@ public class Gimmick_Ceiling_LightBlink : BasicGimmick
     [Header("기믹 식별 설정")]
     public Define.GimmickLV1 myGimmick = Define.GimmickLV1.lightBlink;
 
+    [Header("조명 그룹 부모 오브젝트 (Ceiling_Lights 연결)")]
+    public Transform lightsParent;
+
     [Header("깜빡임 제어 타겟 (원본 오브젝트 연결)")]
-    public Light[] targetLights;
-    public MeshRenderer fluorescentRenderer;
+    [HideInInspector] public Light[] targetLights;
+    [HideInInspector] public MeshRenderer[] fluorescentRenderers;
 
     [Header("깜빡임 주기 설정")]
     public float minOnTime = 0.2f;
@@ -21,6 +24,14 @@ public class Gimmick_Ceiling_LightBlink : BasicGimmick
     private void Awake()
     {
         _code = (int)myGimmick;
+        if (lightsParent != null)
+        {
+            // 새 맵에는 Light가 없으므로 배열이 비어있게 되지만 에러는 나지 않습니다.
+            targetLights = lightsParent.GetComponentsInChildren<Light>();
+
+            // 17개의 형광등 메쉬를 모두 찾아 배열에 저장합니다.
+            fluorescentRenderers = lightsParent.GetComponentsInChildren<MeshRenderer>();
+        }
         ResetGimmick(); // 시작 시 정상 켜짐 상태 보장
     }
 
@@ -79,6 +90,7 @@ public class Gimmick_Ceiling_LightBlink : BasicGimmick
 
     private void SetLightsState(bool isOn)
     {
+        // 1. 모든 실제 조명 제어
         if (targetLights != null)
         {
             foreach (Light light in targetLights)
@@ -87,10 +99,29 @@ public class Gimmick_Ceiling_LightBlink : BasicGimmick
             }
         }
 
-        if (fluorescentRenderer != null)
+        // 2. 모든 형광등 메쉬의 발광(Emission) 제어
+        if (fluorescentRenderers != null)
         {
-            if (isOn) fluorescentRenderer.material.EnableKeyword("_EMISSION");
-            else fluorescentRenderer.material.DisableKeyword("_EMISSION");
+            foreach (MeshRenderer renderer in fluorescentRenderers)
+            {
+                if (renderer != null)
+                {
+                    // 형광등 하나에 붙어있는 다중 매테리얼(Light, Cover)을 모두 껐다 켭니다.
+                    foreach (Material mat in renderer.materials)
+                    {
+                        if (isOn)
+                        {
+                            mat.EnableKeyword("_EMISSION");
+                            mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+                        }
+                        else
+                        {
+                            mat.DisableKeyword("_EMISSION");
+                            mat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.EmissiveIsBlack;
+                        }
+                    }
+                }
+            }
         }
     }
 }
