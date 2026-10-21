@@ -1060,7 +1060,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   MaxStage: 8
   gimmickManager: {fileID: 85271832}
-  fader: {fileID: 591929608}
+  _fader: {fileID: 591929608}
   playerTransform: {fileID: 345838661}
   spawnPoint: {fileID: 820927152}
 --- !u!4 &314393146
