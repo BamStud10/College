@@ -5,7 +5,7 @@ public class Gimmick_ProfDisappear : BasicGimmick
     [Header("기믹 식별 설정")]
     public Define.GimmickLV2 myGimmick = Define.GimmickLV2.profDisappear;
 
-    [Header("제어 타겟 (테스트용 큐브 연결)")]
+    [Header("제어 타겟 (교수 NPC 연결)")]
     public GameObject professorObject;
 
     private void Awake()
@@ -37,18 +37,14 @@ public class Gimmick_ProfDisappear : BasicGimmick
 
     protected override void ExecuteGimmick()
     {
-        Debug.Log("[Gimmick] 교수님 실종 발생! (오브젝트 비활성화)");
-        if (professorObject != null)
-        {
-            professorObject.SetActive(false);
-        }
+        Debug.Log("[Gimmick] 교수 NPC 사라짐 기믹 발동!");
+        // 기믹 발동 시 교수가 복도에서 사라짐
+        if (professorObject != null) professorObject.SetActive(false);
     }
 
     protected override void ResetGimmick()
     {
-        if (professorObject != null)
-        {
-            professorObject.SetActive(true);
-        }
+        // 정상 상태(기믹 미발동)일 때는 교수가 항상 서 있음
+        if (professorObject != null) professorObject.SetActive(true);
     }
 }
