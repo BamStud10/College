@@ -15,6 +15,12 @@ public class GameManager : MonoBehaviour
     [Tooltip("페이드 연출을 담당하는 스크립트")]
     public Fader _fader;
 
+    [Tooltip("ESC를 눌렀을 때 띄울 일시정지(설정) 팝업창")]
+    public GameObject pausePopup;
+
+    // 현재 일시정지 상태인지 추적하는 변수
+    private bool _isPaused = false;
+
     [Header("플레이어 및 스폰 설정")]
     public Transform playerTransform; // 플레이어 오브젝트
     public Transform spawnPoint;      // 복도 시작점 (루프 텔레포트 위치)
@@ -32,8 +38,49 @@ public class GameManager : MonoBehaviour
             _fader.FadeIn();
         }
 
+        // 게임 시작 시 팝업창은 무조건 꺼둔 상태로 시작
+        if (pausePopup != null)
+        {
+            pausePopup.SetActive(false);
+        }
+
         // 게임 시작 시 첫 번째 루프 굴리기
         StartNewLoop();
+    }
+
+    private void Update()
+    {
+        // ESC 키를 누르면 일시정지 토글
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            TogglePause();
+        }
+    }
+
+    public void TogglePause()
+    {
+        _isPaused = !_isPaused;
+
+        // 1. 팝업창 켜기/끄기
+        if (pausePopup != null)
+        {
+            pausePopup.SetActive(_isPaused);
+        }
+
+        // 2. 게임 시간 정지/재개 (0이면 정지, 1이면 정상 속도)
+        Time.timeScale = _isPaused ? 0f : 1f;
+
+        // 3. 마우스 커서 제어 (UI 슬라이더를 조작해야 하므로 커서를 켜줍니다)
+        if (_isPaused)
+        {
+            Cursor.lockState = CursorLockMode.None; // 커서 잠금 해제
+            Cursor.visible = true;                  // 커서 보이기
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked; // 커서 화면 중앙에 잠금
+            Cursor.visible = false;                   // 커서 숨기기
+        }
     }
 
     /// <summary>
@@ -129,5 +176,16 @@ public class GameManager : MonoBehaviour
 
         // D. 이번 복도에 기믹이 존재하는지 저장 (다음 판정을 위해)
         _isAnomalyPresent = (generatedGimmickID != GimmickManager.NORMAL_ID);
+    }
+
+    public void Exit()
+    {
+        // 1. 빌드된 실제 게임(.exe)에서 프로그램 종료
+        Application.Quit();
+
+        // 2. 유니티 에디터에서 테스트 중일 때 플레이 모드 종료 (프로토타입 꿀팁)
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #endif
     }
 }

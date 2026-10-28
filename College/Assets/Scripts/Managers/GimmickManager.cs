@@ -32,6 +32,7 @@ public class GimmickManager : MonoBehaviour
         if (randomRoll < _anomalyChance)
         {
             selectedGimmickID = GetRandomGimmickIDByStage(currentStage);
+
             Debug.Log($"[GimmickManager] 스테이지 {currentStage} 진입. ⚠️이상 현상 발생! (ID: {selectedGimmickID})");
         }
         else

@@ -11,6 +11,8 @@ public class PlayerInteractor : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f) return;
+
         CheckInteractable();
 
         // 목표물이 있고(문을 바라보는 중), F키를 눌렀을 때

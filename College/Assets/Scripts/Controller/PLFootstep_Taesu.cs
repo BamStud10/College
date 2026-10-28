@@ -5,6 +5,7 @@ public class PLFootstep_Taesu : MonoBehaviour
     [Header("발소리 파일 설정")]
     public AudioClip defaultStepSound; // Floor_step0
     public AudioClip gimmickStepSound; // Floor_step1
+    public AudioClip gimmickGrass; // Floor_step2
 
     [Header("발소리 재생 간격")]
     public float stepInterval = 0.5f;
@@ -26,12 +27,6 @@ public class PLFootstep_Taesu : MonoBehaviour
         _audioSource.playOnAwake = false;
         _audioSource.spatialBlend = 0f; // 2D 사운드
 
-        // 경로가 Resources 폴더 기준일 때 자동 로드
-        if (defaultStepSound == null)
-            defaultStepSound = Resources.Load<AudioClip>("Sound/Classic Footstep SFX/Floor/Floor_step0");
-
-        if (gimmickStepSound == null)
-            gimmickStepSound = Resources.Load<AudioClip>("Sound/Classic Footstep SFX/Floor/Floor_step7");
     }
 
     private void Update()
@@ -45,6 +40,9 @@ public class PLFootstep_Taesu : MonoBehaviour
         {
             // 기믹 활성화 여부에 따라 클립 선택
             AudioClip targetClip = isGimmickActive ? gimmickStepSound : defaultStepSound;
+
+            if (CheckInteractable())
+                targetClip = gimmickGrass;
 
             if (targetClip != null)
             {
@@ -60,5 +58,29 @@ public class PLFootstep_Taesu : MonoBehaviour
         {
             _stepTimer = 0f;
         }
+    }
+
+    private bool CheckInteractable()
+    {
+        bool istrue = false;
+
+        Vector3 rayPos = gameObject.transform.position;
+        rayPos.y += 1f;
+
+        Ray ray = new Ray(rayPos, Vector3.down);
+
+        // 핵심: "Player"라는 이름의 레이어만 쏙 빼고(~) 무시하는 마스크 생성
+        int layerMask = ~LayerMask.GetMask("Player");
+
+        // RaycastAll을 지우고, 가벼운 단일 Raycast에 layerMask 조건을 추가합니다.
+        if (Physics.Raycast(ray, out RaycastHit hit, 10f, layerMask))
+        {
+            if (hit.collider.CompareTag("grass"))
+            {
+                istrue = true;
+            }
+        }
+
+        return istrue;
     }
 }
