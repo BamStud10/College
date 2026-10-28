@@ -4,7 +4,6 @@ public class Define
 {
     public enum GimmickLV1
     {
-        drwoning = 1,
         roadChange = 2,
         stageFlip = 3,
         lightBlink = 4,
@@ -13,7 +12,7 @@ public class Define
         emergencyCall = 7,
         profDance = 8,
         profArmy = 9,
-        profPortal = 10,
+        //profPortal = 10,
         profToChair = 11
     }
 
@@ -33,7 +32,6 @@ public class Define
     {
         panelChange = 200,
         waterMachineChange = 201,
-        profGlassDisappear = 202,
         silenceWalk = 203
     }
 }
