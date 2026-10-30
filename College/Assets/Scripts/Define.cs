@@ -32,6 +32,7 @@ public class Define
     {
         panelChange = 200,
         waterMachineChange = 201,
-        silenceWalk = 203
+        silenceWalk = 203,
+        profBagDisappear = 204
     }
 }
