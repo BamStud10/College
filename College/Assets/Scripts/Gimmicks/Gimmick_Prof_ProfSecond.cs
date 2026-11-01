@@ -41,11 +41,6 @@ public class Gimmick_Prof_ProfSecond : BasicGimmick
         base.OnDisable();
     }
 
-    private void Start()
-    {
-        ResetGimmick();
-    }
-
     /// <summary>
     /// 첫 번째 교수님의 가로 감지 콜라이더(Gimmick_ProfSecond_PassTrigger)에서 호출
     /// </summary>

@@ -11,7 +11,7 @@ public class Gimmick_Prof_ProfBagDisappear : BasicGimmick
 
     [Header("소멸시킬 가방 오브젝트")]
     [Tooltip("RightHand 손 뼈대 자식으로 들어가 있는 가방 오브젝트")]
-    [SerializeField] private GameObject _bagObject;
+    [SerializeField] public GameObject _bagObject;
 
     private void Awake()
     {
@@ -29,10 +29,6 @@ public class Gimmick_Prof_ProfBagDisappear : BasicGimmick
         base.OnDisable();
     }
 
-    private void Start()
-    {
-        ResetGimmick();
-    }
 
     /// <summary>
     /// GimmickManager로부터 본인 ID 신호를 받을 때 실행

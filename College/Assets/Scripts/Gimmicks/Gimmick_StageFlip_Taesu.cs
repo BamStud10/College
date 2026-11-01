@@ -75,8 +75,11 @@ public class Gimmick_StageFlip_Taesu : BasicGimmick
             }
 
             Debug.Log("좆같은 오류수정");
+
+            Vector3 pos = _gm.spawnPoint.position;
+            Vector3 newPos = new Vector3(pos.x, pos.y - 3, pos.z);
             // 뒤집혀서 위치가 바뀐 spawnPoint의 좌표로 플레이어를 다시 이동시킵니다.
-            _gm.playerTransform.position = _gm.spawnPoint.position;
+            _gm.playerTransform.position = newPos;
         }
 
         isGimmickActive = true;

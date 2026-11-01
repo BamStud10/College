@@ -21,15 +21,19 @@ public class Gimmick_Road_RoadChange : BasicGimmick
     [Tooltip("기믹 발동(이상 현상) 시 변경될 머티리얼 (예: 흙길 등)")]
     [SerializeField] private Material _anomalyMaterial;
 
+    [Header("태그/레이어 변경 설정 (선택)")]
+    [Tooltip("정상 상태일 때의 바닥 태그 (예: Walkable_Wood, Floor)")]
+    [SerializeField] private string _normalTag = "Untagged";
+
+    [Tooltip("이상 현상(흙길)일 때의 바닥 태그 (예: Walkable_Dirt, Dirt)")]
+    [SerializeField] private string _anomalyTag = "grass";
+
     private void Awake()
     {
         _code = (int)myGimmick;
         ResetGimmick();
     }
 
-    /// <summary>
-    /// 기믹 발동: 이상 현상 머티리얼로 교체
-    /// </summary>
     protected override void ExecuteGimmick()
     {
         Debug.Log($"[Gimmick_RoadChange] 기믹 활성화: 도로 머티리얼 변경 (ID: {_code})");
@@ -37,17 +41,16 @@ public class Gimmick_Road_RoadChange : BasicGimmick
         if (_roadRenderer != null && _anomalyMaterial != null)
         {
             _roadRenderer.material = _anomalyMaterial;
+            _roadRenderer.gameObject.tag = _anomalyTag; // 태그 변경
         }
     }
 
-    /// <summary>
-    /// 초기화: 기본 머티리얼로 원복
-    /// </summary>
     protected override void ResetGimmick()
     {
         if (_roadRenderer != null && _normalMaterial != null)
         {
             _roadRenderer.material = _normalMaterial;
+            _roadRenderer.gameObject.tag = _normalTag; // 원복
         }
     }
 }

@@ -36,11 +36,6 @@ public class Gimmick_Change_Toilet : BasicGimmick
         base.OnDisable();
     }
 
-    private void Start()
-    {
-        ResetGimmick();
-    }
-
     /// <summary>
     /// 105번 신호 수신 시: 의자를 숨기고, 의자의 위치와 회전값(Rotation)에 맞춰 변기 생성
     /// </summary>
