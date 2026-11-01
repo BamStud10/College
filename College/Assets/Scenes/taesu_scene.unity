@@ -701,6 +701,8 @@ MonoBehaviour:
   walkSpeed: 5
   lookSensitivity: 2
   cameraTransform: {fileID: 1113427781}
+  bobbingSpeed: 8
+  bobbingAmount: 0.05
 --- !u!114 &176471649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -819,6 +821,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PLFootstep_Taesu
   defaultStepSound: {fileID: 0}
   gimmickStepSound: {fileID: 0}
+  gimmickGrass: {fileID: 0}
   stepInterval: 0.5
 --- !u!1 &198094118
 GameObject:
@@ -1857,17 +1860,6 @@ MonoBehaviour:
       type: {class: SplineAutoDolly/FixedSpeed, ns: Unity.Cinemachine, asm: Unity.Cinemachine}
       data:
         Speed: 0.01
---- !u!114 &618728257 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6483783198177166976, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-  m_PrefabInstance: {fileID: 1762023012}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 34f92a0d8da90014b82ecb0aff218cdd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GimmickManager
 --- !u!1 &622542547 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7253491221861995685, guid: 942e521f21c1a004bb70ad3c34a527cc, type: 3}
@@ -4518,8 +4510,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   MaxStage: 8
-  gimmickManager: {fileID: 618728257}
+  gimmickManager: {fileID: 0}
   _fader: {fileID: 0}
+  pausePopup: {fileID: 0}
   playerTransform: {fileID: 176471650}
   spawnPoint: {fileID: 771616513}
 --- !u!4 &1423054442
@@ -5246,71 +5239,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -5354435047171763840, guid: be3c1d86c5e1a604bb3f3d9ead2c0904, type: 3}
---- !u!1001 &1762023012
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 2374972146578381145, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_Name
-      value: '@GimmickManager'
-      objectReference: {fileID: 0}
-    - target: {fileID: 4322294677547392362, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.43274
-      objectReference: {fileID: 0}
-    - target: {fileID: 4322294677547392362, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.64343
-      objectReference: {fileID: 0}
-    - target: {fileID: 4322294677547392362, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 17.21526
-      objectReference: {fileID: 0}
-    - target: {fileID: 4322294677547392362, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4322294677547392362, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4322294677547392362, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4322294677547392362, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4322294677547392362, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4322294677547392362, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4322294677547392362, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6483783198177166976, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6483783198177166976, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
-      propertyPath: currentStage
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 05b9d9fdfeb2f3f40aba193f4e64212d, type: 3}
 --- !u!1 &1772182370 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f7d8fba3d955fb44d9fd28683efeb2c0, type: 3}
@@ -6865,7 +6793,6 @@ SceneRoots:
   - {fileID: 1423054442}
   - {fileID: 2017831207}
   - {fileID: 381701088}
-  - {fileID: 1762023012}
   - {fileID: 852351979}
   - {fileID: 768851015}
   - {fileID: 1308826700}
