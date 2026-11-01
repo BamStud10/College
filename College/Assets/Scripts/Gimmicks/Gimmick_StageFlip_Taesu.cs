@@ -8,6 +8,8 @@ public class Gimmick_StageFlip_Taesu : BasicGimmick
 
     public float hallwayHeight = 5.0f;
 
+    public GameManager _gm;
+
     private Quaternion originalMapRotation;
     private Vector3 originalMapPosition;
     private bool isGimmickActive = false;
@@ -62,6 +64,19 @@ public class Gimmick_StageFlip_Taesu : BasicGimmick
             // 💡 local 기준 회전 및 위치 오프셋 적용
             mapTransform.localRotation = originalMapRotation * Quaternion.Euler(0f, 0f, 180f);
             mapTransform.localPosition = originalMapPosition + new Vector3(0f, hallwayHeight, 0f);
+        }
+
+        if (_gm != null)
+        {
+            Rigidbody playerRb = _gm.playerTransform.GetComponent<Rigidbody>();
+            if (playerRb != null)
+            {
+                playerRb.linearVelocity = Vector3.zero; // 미끄러짐 방지
+            }
+
+            Debug.Log("좆같은 오류수정");
+            // 뒤집혀서 위치가 바뀐 spawnPoint의 좌표로 플레이어를 다시 이동시킵니다.
+            _gm.playerTransform.position = _gm.spawnPoint.position;
         }
 
         isGimmickActive = true;

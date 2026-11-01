@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour
         }
 
         // 클리어 체크
-        if (CurrentStage >= MaxStage)
+        if (CurrentStage > MaxStage)
         {
             Debug.Log("🎉 게임 클리어! 대학교 탈출 성공!");
 

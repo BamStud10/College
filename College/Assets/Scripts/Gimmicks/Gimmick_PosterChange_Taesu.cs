@@ -11,7 +11,7 @@ public class Gimmik_PosterChange_Taesu : BasicGimmick
 
     [Header("기믹 이미지 경로 설정 (Resources 폴더 기준)")]
     [Tooltip("예: Assets/Textures/gimmick_game_poster/gimmick_game_poster_1")]
-    public string gimmickTexturePath = "Assets/Textures/gimmick_game_poster/gimmick_game_poster_1";
+    public string gimmickTexturePath = "Texture/gimmick_game_poster/gimmick_game_poster_1";
 
     private MeshRenderer[] targetMeshRenderers;
     private Texture[] originalTextures;
