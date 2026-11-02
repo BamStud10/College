@@ -30,6 +30,8 @@ public class Gimmick_Ceiling_LightBlink : BasicGimmick
     private Coroutine _flickerCoroutine;
     private bool _isGimmickActive = false;
 
+    public AudioSource _audioSource;
+
     private void Awake()
     {
         _code = (int)myGimmick;
@@ -71,6 +73,11 @@ public class Gimmick_Ceiling_LightBlink : BasicGimmick
         Debug.Log("[Gimmick] 원본 형광등 깜빡임 시작!");
         _isGimmickActive = true; // 기믹 활성화 기록
 
+        if (_audioSource != null)
+        {
+            _audioSource.Play();
+        }
+
         if (_flickerCoroutine != null) StopCoroutine(_flickerCoroutine);
         _flickerCoroutine = StartCoroutine(FlickerRoutine());
     }
@@ -81,6 +88,11 @@ public class Gimmick_Ceiling_LightBlink : BasicGimmick
         {
             StopCoroutine(_flickerCoroutine);
             _flickerCoroutine = null;
+        }
+
+        if (_audioSource != null)
+        {
+            _audioSource.Stop();
         }
 
         // 자신이 켜져 있던 상태에서만 태양광 및 전구를 켜서 원상복구합니다.
